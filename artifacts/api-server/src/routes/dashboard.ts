@@ -6,6 +6,7 @@ import {
   GetRecentAssessmentsResponse,
   GetCountryDistributionResponse,
   GetRiskBreakdownResponse,
+  GetDashboardNudgesResponse,
 } from "@workspace/api-zod";
 
 const router: IRouter = Router();
@@ -108,6 +109,58 @@ router.get("/dashboard/risk-breakdown", async (req, res): Promise<void> => {
   }));
 
   res.json(GetRiskBreakdownResponse.parse(result));
+});
+
+router.get("/dashboard/nudges", async (_req, res): Promise<void> => {
+  const nudges = [
+    {
+      id: "n1",
+      type: "action",
+      title: "Complete Your Loan Assessment",
+      message: "You haven't run the Loan Readiness engine yet. Know your eligibility before applying.",
+      priority: "high",
+      action: "/loan",
+      actionLabel: "Check Eligibility",
+    },
+    {
+      id: "n2",
+      type: "reminder",
+      title: "UK September Deadline Approaching",
+      message: "Top UK universities close applications in January. Start your SOP now.",
+      priority: "high",
+      action: "/journey",
+      actionLabel: "Plan Timeline",
+    },
+    {
+      id: "n3",
+      type: "opportunity",
+      title: "3 Scholarships Match Your Profile",
+      message: "You qualify for Chevening, DAAD, and Inlaks scholarships. Apply before deadlines.",
+      priority: "medium",
+      action: "/scholarships",
+      actionLabel: "View Scholarships",
+    },
+    {
+      id: "n4",
+      type: "tip",
+      title: "Improve Your Placement Score",
+      message: "Adding 2 more technical skills to your profile can boost your placement score by 8 points.",
+      priority: "low",
+      action: "/career",
+      actionLabel: "Update Profile",
+    },
+    {
+      id: "n5",
+      type: "achievement",
+      title: "Earn the Journey Planner Badge",
+      message: "Generate your application timeline to unlock the Journey Planner achievement badge.",
+      priority: "low",
+      action: "/gamification",
+      actionLabel: "View Achievements",
+    },
+  ];
+
+  res.json(GetDashboardNudgesResponse.parse(nudges));
 });
 
 export default router;

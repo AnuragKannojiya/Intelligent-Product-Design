@@ -1,11 +1,13 @@
+import { useState } from "react";
 import { AppLayout } from "@/components/layout/app-layout";
 import { GlassCard } from "@/components/ui/glass-card";
-import { useGetDashboardSummary, useGetRecentAssessments, useGetCountryDistribution, useGetRiskBreakdown } from "@workspace/api-client-react";
+import { useGetDashboardSummary, useGetRecentAssessments, useGetCountryDistribution, useGetRiskBreakdown, useGetDashboardNudges } from "@workspace/api-client-react";
 import { BarChart, Bar, XAxis, YAxis, Tooltip, ResponsiveContainer, PieChart, Pie, Cell } from "recharts";
-import { Users, TrendingUp, ShieldCheck, Compass, Calculator, MapPin } from "lucide-react";
+import { Users, TrendingUp, ShieldCheck, Compass, Calculator, MapPin, X, AlertCircle } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
 import { Link } from "wouter";
 import { Button } from "@/components/ui/button";
+import { motion, AnimatePresence } from "framer-motion";
 
 const COLORS = ['hsl(190 100% 50%)', 'hsl(239 84% 67%)', 'hsl(280 70% 60%)', 'hsl(150 60% 50%)'];
 
@@ -14,6 +16,19 @@ export default function Dashboard() {
   const { data: assessments, isLoading: isLoadingAssessments } = useGetRecentAssessments();
   const { data: countries, isLoading: isLoadingCountries } = useGetCountryDistribution();
   const { data: risks, isLoading: isLoadingRisks } = useGetRiskBreakdown();
+  const { data: initialNudges, isLoading: isLoadingNudges } = useGetDashboardNudges();
+
+  const [dismissedNudges, setDismissedNudges] = useState<Set<string>>(new Set());
+
+  const activeNudges = initialNudges?.filter(n => !dismissedNudges.has(n.id)) || [];
+
+  const handleDismissNudge = (id: string) => {
+    setDismissedNudges(prev => {
+      const newSet = new Set(prev);
+      newSet.add(id);
+      return newSet;
+    });
+  };
 
   const renderRiskBadge = (level: string) => {
     switch (level.toLowerCase()) {
@@ -21,6 +36,15 @@ export default function Dashboard() {
       case 'medium': return <Badge className="bg-amber-500/10 text-amber-500 border-amber-500/20">Medium Risk</Badge>;
       case 'high': return <Badge className="bg-red-500/10 text-red-500 border-red-500/20">High Risk</Badge>;
       default: return <Badge variant="outline">{level}</Badge>;
+    }
+  };
+
+  const getNudgeColor = (priority: string) => {
+    switch (priority.toLowerCase()) {
+      case 'high': return 'bg-red-500';
+      case 'medium': return 'bg-amber-500';
+      case 'low': return 'bg-emerald-500';
+      default: return 'bg-primary';
     }
   };
 
@@ -39,6 +63,53 @@ export default function Dashboard() {
             <Link href="/loan"><Button variant="outline" className="border-chart-4/20 hover:bg-chart-4/10 text-chart-4 gap-2"><Calculator className="h-4 w-4"/> Loan</Button></Link>
           </div>
         </div>
+
+        {/* Smart Nudges */}
+        {!isLoadingNudges && activeNudges.length > 0 && (
+          <div className="space-y-3">
+            <h3 className="text-sm font-semibold text-muted-foreground uppercase tracking-wider flex items-center gap-2">
+              <AlertCircle className="w-4 h-4" /> Action Required
+            </h3>
+            <div className="flex gap-4 overflow-x-auto pb-2 snap-x">
+              <AnimatePresence>
+                {activeNudges.map(nudge => (
+                  <motion.div
+                    key={nudge.id}
+                    initial={{ opacity: 0, scale: 0.95 }}
+                    animate={{ opacity: 1, scale: 1 }}
+                    exit={{ opacity: 0, scale: 0.9, width: 0, margin: 0 }}
+                    className="snap-start shrink-0 w-[350px]"
+                  >
+                    <GlassCard className="p-4 relative bg-card/60 hover:bg-card transition-colors">
+                      <Button 
+                        variant="ghost" 
+                        size="icon" 
+                        className="absolute top-2 right-2 h-6 w-6 text-muted-foreground hover:text-foreground"
+                        onClick={() => handleDismissNudge(nudge.id)}
+                      >
+                        <X className="w-3 h-3" />
+                      </Button>
+                      <div className="flex items-start gap-3">
+                        <div className={`w-2 h-2 rounded-full mt-1.5 shrink-0 ${getNudgeColor(nudge.priority)} shadow-[0_0_8px_currentColor]`} />
+                        <div className="space-y-1 pr-4">
+                          <h4 className="font-semibold text-sm text-foreground/90 leading-tight">{nudge.title}</h4>
+                          <p className="text-xs text-muted-foreground line-clamp-2">{nudge.message}</p>
+                          {nudge.action && nudge.actionLabel && (
+                            <Link href={nudge.action}>
+                              <Button variant="link" className="p-0 h-auto text-xs text-primary mt-2">
+                                {nudge.actionLabel} →
+                              </Button>
+                            </Link>
+                          )}
+                        </div>
+                      </div>
+                    </GlassCard>
+                  </motion.div>
+                ))}
+              </AnimatePresence>
+            </div>
+          </div>
+        )}
 
         {/* Summary Stats */}
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">

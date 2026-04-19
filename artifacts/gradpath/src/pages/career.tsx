@@ -141,7 +141,7 @@ export default function CareerNavigator() {
                           <span className="font-medium text-lg">{country.flag} {country.country}</span>
                           <span className="text-xs text-primary font-mono">{country.fitScore}% Fit</span>
                         </div>
-                        <Progress value={country.fitScore} className="h-1.5 mb-3 bg-white/10" indicatorClassName="bg-primary" />
+                        <Progress value={country.fitScore} className="h-1.5 mb-3 bg-white/10"  />
                         <div className="text-xs text-muted-foreground space-y-1">
                           <div className="flex justify-between"><span>PSW:</span> <span className="text-foreground">{country.postStudyWork}</span></div>
                           <div className="flex justify-between"><span>Market:</span> <span className="text-foreground">{country.jobMarket}</span></div>

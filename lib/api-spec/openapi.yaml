@@ -2,24 +2,23 @@ openapi: 3.1.0
 info:
   # Do not change the title, if the title changes, the import paths will be broken
   title: Api
-  version: 0.1.0
+  version: 0.2.0
   description: GradPath AI – Career to Loan Intelligence Platform API
 servers:
   - url: /api
     description: Base API path
 tags:
   - name: health
-    description: Health operations
   - name: profile
-    description: Student profile operations
   - name: career
-    description: AI Career Navigator
   - name: roi
-    description: ROI and Outcome Intelligence
   - name: loan
-    description: Loan Readiness Engine
   - name: dashboard
-    description: Dashboard summaries
+  - name: journey
+  - name: copilot
+  - name: gamification
+  - name: scholarship
+  - name: visa
 
 paths:
   /healthz:
@@ -39,7 +38,7 @@ paths:
     post:
       operationId: createProfile
       tags: [profile]
-      summary: Create or update student profile
+      summary: Create student profile
       requestBody:
         required: true
         content:
@@ -90,7 +89,7 @@ paths:
     post:
       operationId: getCareerRecommendations
       tags: [career]
-      summary: Get AI career recommendations (countries, courses, universities)
+      summary: Get AI career recommendations
       requestBody:
         required: true
         content:
@@ -109,7 +108,7 @@ paths:
     post:
       operationId: getRoiPrediction
       tags: [roi]
-      summary: Get ROI, salary, and placement prediction
+      summary: Get ROI and placement prediction
       requestBody:
         required: true
         content:
@@ -118,7 +117,7 @@ paths:
               $ref: "#/components/schemas/RoiPredictionBody"
       responses:
         "200":
-          description: ROI prediction result
+          description: ROI prediction
           content:
             application/json:
               schema:
@@ -137,17 +136,36 @@ paths:
               $ref: "#/components/schemas/LoanEligibilityBody"
       responses:
         "200":
-          description: Loan eligibility result
+          description: Loan eligibility
           content:
             application/json:
               schema:
                 $ref: "#/components/schemas/LoanEligibilityResult"
 
+  /loan/offers:
+    post:
+      operationId: getLoanOffers
+      tags: [loan]
+      summary: Get alternative loan and funding offer recommendations
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/LoanOffersBody"
+      responses:
+        "200":
+          description: Loan offers
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/LoanOffersResult"
+
   /dashboard/summary:
     get:
       operationId: getDashboardSummary
       tags: [dashboard]
-      summary: Get platform-level dashboard summary stats
+      summary: Get platform dashboard summary
       responses:
         "200":
           description: Dashboard summary
@@ -201,6 +219,163 @@ paths:
                 items:
                   $ref: "#/components/schemas/RiskBreakdown"
 
+  /dashboard/nudges:
+    get:
+      operationId: getDashboardNudges
+      tags: [dashboard]
+      summary: Get smart nudges and action suggestions
+      responses:
+        "200":
+          description: Smart nudges
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/SmartNudge"
+
+  /journey/timeline:
+    post:
+      operationId: generateTimeline
+      tags: [journey]
+      summary: Generate personalized application timeline
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/TimelineBody"
+      responses:
+        "200":
+          description: Application timeline
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/TimelineResult"
+
+  /journey/checklist:
+    post:
+      operationId: getDocumentChecklist
+      tags: [journey]
+      summary: Get document checklist for target country
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/ChecklistBody"
+      responses:
+        "200":
+          description: Document checklist
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ChecklistResult"
+
+  /journey/sop-guide:
+    post:
+      operationId: getSopGuide
+      tags: [journey]
+      summary: Get SOP writing guide and structure
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/SopGuideBody"
+      responses:
+        "200":
+          description: SOP guide
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/SopGuideResult"
+
+  /copilot/chat:
+    post:
+      operationId: sendCopilotMessage
+      tags: [copilot]
+      summary: Send a message to the AI copilot
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/CopilotMessageBody"
+      responses:
+        "200":
+          description: Copilot reply
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/CopilotMessageResult"
+
+  /gamification/profile:
+    get:
+      operationId: getGamificationProfile
+      tags: [gamification]
+      summary: Get user gamification profile badges and streak
+      responses:
+        "200":
+          description: Gamification profile
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/GamificationProfile"
+
+  /gamification/leaderboard:
+    get:
+      operationId: getLeaderboard
+      tags: [gamification]
+      summary: Get top students leaderboard
+      responses:
+        "200":
+          description: Leaderboard
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/LeaderboardEntry"
+
+  /scholarship/match:
+    post:
+      operationId: matchScholarships
+      tags: [scholarship]
+      summary: Match scholarships based on student profile
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/ScholarshipMatchBody"
+      responses:
+        "200":
+          description: Scholarship matches
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ScholarshipMatchResult"
+
+  /visa/guide:
+    post:
+      operationId: getVisaGuide
+      tags: [visa]
+      summary: Get visa guidance for target country
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/VisaGuideBody"
+      responses:
+        "200":
+          description: Visa guide
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/VisaGuideResult"
+
 components:
   schemas:
     HealthStatus:
@@ -208,8 +383,7 @@ components:
       properties:
         status:
           type: string
-      required:
-        - status
+      required: [status]
 
     StudentProfile:
       type: object
@@ -246,12 +420,7 @@ components:
           type: boolean
         createdAt:
           type: string
-      required:
-        - id
-        - name
-        - degree
-        - cgpa
-        - createdAt
+      required: [id, name, degree, cgpa, createdAt]
 
     CreateProfileBody:
       type: object
@@ -284,10 +453,7 @@ components:
           type: string
         hasCoApplicant:
           type: boolean
-      required:
-        - name
-        - degree
-        - cgpa
+      required: [name, degree, cgpa]
 
     CareerRecommendationBody:
       type: object
@@ -310,9 +476,7 @@ components:
           type: array
           items:
             type: string
-      required:
-        - cgpa
-        - degree
+      required: [cgpa, degree]
 
     CareerRecommendationResult:
       type: object
@@ -335,11 +499,7 @@ components:
             type: string
         aiExplanation:
           type: string
-      required:
-        - countries
-        - courses
-        - universities
-        - aiExplanation
+      required: [countries, courses, universities, aiExplanation]
 
     CountryRecommendation:
       type: object
@@ -358,10 +518,7 @@ components:
           type: string
         reason:
           type: string
-      required:
-        - country
-        - fitScore
-        - reason
+      required: [country, fitScore, reason]
 
     CourseRecommendation:
       type: object
@@ -378,9 +535,7 @@ components:
           type: string
         reason:
           type: string
-      required:
-        - name
-        - field
+      required: [name, field]
 
     UniversityRecommendation:
       type: object
@@ -399,10 +554,7 @@ components:
           type: integer
         reason:
           type: string
-      required:
-        - name
-        - country
-        - tier
+      required: [name, country, tier]
 
     RoiPredictionBody:
       type: object
@@ -429,10 +581,7 @@ components:
           type: integer
         loanAmount:
           type: integer
-      required:
-        - cgpa
-        - degree
-        - field
+      required: [cgpa, degree, field]
 
     RoiPredictionResult:
       type: object
@@ -461,16 +610,7 @@ components:
           type: number
         aiExplanation:
           type: string
-      required:
-        - placementScore
-        - placement3Month
-        - placement6Month
-        - placement12Month
-        - riskLevel
-        - salaryBandMin
-        - salaryBandMax
-        - roiStrength
-        - aiExplanation
+      required: [placementScore, placement3Month, placement6Month, placement12Month, riskLevel, salaryBandMin, salaryBandMax, roiStrength, aiExplanation]
 
     CostBreakdown:
       type: object
@@ -487,9 +627,7 @@ components:
           type: integer
         total:
           type: integer
-      required:
-        - tuition
-        - total
+      required: [tuition, total]
 
     LoanEligibilityBody:
       type: object
@@ -508,9 +646,7 @@ components:
           type: string
         tenure:
           type: integer
-      required:
-        - totalCost
-        - expectedSalary
+      required: [totalCost, expectedSalary]
 
     LoanEligibilityResult:
       type: object
@@ -537,12 +673,7 @@ components:
           type: string
         aiExplanation:
           type: string
-      required:
-        - eligibleMin
-        - eligibleMax
-        - loanReadinessScore
-        - readinessLevel
-        - aiExplanation
+      required: [eligibleMin, eligibleMax, loanReadinessScore, readinessLevel, aiExplanation]
 
     EmiScenario:
       type: object
@@ -555,10 +686,62 @@ components:
           type: integer
         stressLevel:
           type: string
-      required:
-        - tenure
-        - emi
-        - stressLevel
+      required: [tenure, emi, stressLevel]
+
+    LoanOffersBody:
+      type: object
+      properties:
+        totalCost:
+          type: integer
+        expectedSalary:
+          type: integer
+        riskLevel:
+          type: string
+        hasCoApplicant:
+          type: boolean
+        targetCountry:
+          type: string
+        scholarshipAvailable:
+          type: integer
+      required: [totalCost, expectedSalary]
+
+    LoanOffersResult:
+      type: object
+      properties:
+        offers:
+          type: array
+          items:
+            $ref: "#/components/schemas/LoanOffer"
+        recommendation:
+          type: string
+        bestOption:
+          type: string
+      required: [offers, recommendation, bestOption]
+
+    LoanOffer:
+      type: object
+      properties:
+        provider:
+          type: string
+        type:
+          type: string
+        amount:
+          type: string
+        interestRate:
+          type: string
+        tenure:
+          type: string
+        pros:
+          type: array
+          items:
+            type: string
+        cons:
+          type: array
+          items:
+            type: string
+        suitability:
+          type: string
+      required: [provider, type, amount, suitability]
 
     DashboardSummary:
       type: object
@@ -579,10 +762,7 @@ components:
           type: number
         totalLoanVolumeCr:
           type: number
-      required:
-        - totalAssessments
-        - avgPlacementScore
-        - topDestination
+      required: [totalAssessments, avgPlacementScore, topDestination]
 
     AssessmentSummary:
       type: object
@@ -603,12 +783,7 @@ components:
           type: integer
         createdAt:
           type: string
-      required:
-        - id
-        - studentName
-        - placementScore
-        - riskLevel
-        - createdAt
+      required: [id, studentName, placementScore, riskLevel, createdAt]
 
     CountryDistribution:
       type: object
@@ -619,10 +794,7 @@ components:
           type: integer
         percentage:
           type: number
-      required:
-        - country
-        - count
-        - percentage
+      required: [country, count, percentage]
 
     RiskBreakdown:
       type: object
@@ -633,7 +805,397 @@ components:
           type: integer
         percentage:
           type: number
-      required:
-        - level
-        - count
-        - percentage
+      required: [level, count, percentage]
+
+    SmartNudge:
+      type: object
+      properties:
+        id:
+          type: string
+        type:
+          type: string
+        title:
+          type: string
+        message:
+          type: string
+        priority:
+          type: string
+        action:
+          type: string
+        actionLabel:
+          type: string
+      required: [id, type, title, message, priority]
+
+    TimelineBody:
+      type: object
+      properties:
+        targetIntake:
+          type: string
+        targetCountry:
+          type: string
+        targetCourse:
+          type: string
+        currentStatus:
+          type: string
+        hasIelts:
+          type: boolean
+        hasGre:
+          type: boolean
+        cgpa:
+          type: number
+      required: [targetIntake, targetCountry]
+
+    TimelineResult:
+      type: object
+      properties:
+        phases:
+          type: array
+          items:
+            $ref: "#/components/schemas/TimelinePhase"
+        totalWeeks:
+          type: integer
+        intakeDate:
+          type: string
+        urgencyLevel:
+          type: string
+        summary:
+          type: string
+      required: [phases, totalWeeks, urgencyLevel, summary]
+
+    TimelinePhase:
+      type: object
+      properties:
+        phase:
+          type: string
+        title:
+          type: string
+        startWeek:
+          type: integer
+        endWeek:
+          type: integer
+        tasks:
+          type: array
+          items:
+            type: string
+        color:
+          type: string
+        status:
+          type: string
+      required: [phase, title, startWeek, endWeek, tasks, color, status]
+
+    ChecklistBody:
+      type: object
+      properties:
+        targetCountry:
+          type: string
+        degree:
+          type: string
+        hasLoanRequirement:
+          type: boolean
+      required: [targetCountry]
+
+    ChecklistResult:
+      type: object
+      properties:
+        categories:
+          type: array
+          items:
+            $ref: "#/components/schemas/ChecklistCategory"
+        totalDocuments:
+          type: integer
+        criticalCount:
+          type: integer
+      required: [categories, totalDocuments, criticalCount]
+
+    ChecklistCategory:
+      type: object
+      properties:
+        category:
+          type: string
+        icon:
+          type: string
+        items:
+          type: array
+          items:
+            $ref: "#/components/schemas/ChecklistItem"
+      required: [category, icon, items]
+
+    ChecklistItem:
+      type: object
+      properties:
+        id:
+          type: string
+        name:
+          type: string
+        description:
+          type: string
+        isCritical:
+          type: boolean
+        tip:
+          type: string
+      required: [id, name, isCritical]
+
+    SopGuideBody:
+      type: object
+      properties:
+        degree:
+          type: string
+        targetCourse:
+          type: string
+        targetUniversity:
+          type: string
+        cgpa:
+          type: number
+        careerGoal:
+          type: string
+      required: [targetCourse]
+
+    SopGuideResult:
+      type: object
+      properties:
+        structure:
+          type: array
+          items:
+            $ref: "#/components/schemas/SopSection"
+        tips:
+          type: array
+          items:
+            type: string
+        commonMistakes:
+          type: array
+          items:
+            type: string
+        wordCountTarget:
+          type: integer
+        sampleOpener:
+          type: string
+      required: [structure, tips, commonMistakes, wordCountTarget]
+
+    SopSection:
+      type: object
+      properties:
+        section:
+          type: string
+        title:
+          type: string
+        wordCount:
+          type: integer
+        guidance:
+          type: string
+        keyPoints:
+          type: array
+          items:
+            type: string
+      required: [section, title, wordCount, guidance, keyPoints]
+
+    CopilotMessageBody:
+      type: object
+      properties:
+        message:
+          type: string
+        context:
+          type: string
+        history:
+          type: array
+          items:
+            $ref: "#/components/schemas/ChatMessage"
+      required: [message]
+
+    CopilotMessageResult:
+      type: object
+      properties:
+        reply:
+          type: string
+        suggestions:
+          type: array
+          items:
+            type: string
+        relatedModule:
+          type: string
+      required: [reply, suggestions]
+
+    ChatMessage:
+      type: object
+      properties:
+        role:
+          type: string
+        content:
+          type: string
+      required: [role, content]
+
+    GamificationProfile:
+      type: object
+      properties:
+        level:
+          type: integer
+        levelTitle:
+          type: string
+        xp:
+          type: integer
+        xpToNextLevel:
+          type: integer
+        streakDays:
+          type: integer
+        badges:
+          type: array
+          items:
+            $ref: "#/components/schemas/Badge"
+        completedModules:
+          type: array
+          items:
+            type: string
+        progressPercent:
+          type: integer
+        rank:
+          type: integer
+      required: [level, levelTitle, xp, xpToNextLevel, streakDays, badges, progressPercent]
+
+    Badge:
+      type: object
+      properties:
+        id:
+          type: string
+        name:
+          type: string
+        description:
+          type: string
+        icon:
+          type: string
+        earnedAt:
+          type: string
+        rarity:
+          type: string
+        isEarned:
+          type: boolean
+      required: [id, name, description, icon, rarity, isEarned]
+
+    LeaderboardEntry:
+      type: object
+      properties:
+        rank:
+          type: integer
+        name:
+          type: string
+        xp:
+          type: integer
+        level:
+          type: integer
+        badges:
+          type: integer
+        targetCountry:
+          type: string
+      required: [rank, name, xp, level, badges]
+
+    ScholarshipMatchBody:
+      type: object
+      properties:
+        cgpa:
+          type: number
+        degree:
+          type: string
+        targetCountry:
+          type: string
+        field:
+          type: string
+        nationality:
+          type: string
+        financialNeed:
+          type: boolean
+      required: [cgpa, degree]
+
+    ScholarshipMatchResult:
+      type: object
+      properties:
+        scholarships:
+          type: array
+          items:
+            $ref: "#/components/schemas/Scholarship"
+        totalValue:
+          type: string
+        summary:
+          type: string
+      required: [scholarships, totalValue, summary]
+
+    Scholarship:
+      type: object
+      properties:
+        id:
+          type: string
+        name:
+          type: string
+        provider:
+          type: string
+        country:
+          type: string
+        amount:
+          type: string
+        coverage:
+          type: string
+        eligibility:
+          type: string
+        deadline:
+          type: string
+        matchScore:
+          type: number
+        type:
+          type: string
+        applicationUrl:
+          type: string
+      required: [id, name, provider, country, amount, matchScore, type]
+
+    VisaGuideBody:
+      type: object
+      properties:
+        country:
+          type: string
+        degree:
+          type: string
+        intakeMonth:
+          type: string
+        nationality:
+          type: string
+      required: [country]
+
+    VisaGuideResult:
+      type: object
+      properties:
+        country:
+          type: string
+        visaType:
+          type: string
+        processingTime:
+          type: string
+        fee:
+          type: string
+        steps:
+          type: array
+          items:
+            $ref: "#/components/schemas/VisaStep"
+        requiredDocuments:
+          type: array
+          items:
+            type: string
+        tips:
+          type: array
+          items:
+            type: string
+        successRate:
+          type: number
+        postStudyWork:
+          type: string
+      required: [country, visaType, processingTime, steps, requiredDocuments, tips]
+
+    VisaStep:
+      type: object
+      properties:
+        step:
+          type: integer
+        title:
+          type: string
+        description:
+          type: string
+        timeframe:
+          type: string
+        critical:
+          type: boolean
+      required: [step, title, description, timeframe, critical]

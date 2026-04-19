@@ -3,7 +3,7 @@
  * Do not edit manually.
  * Api
  * GradPath AI – Career to Loan Intelligence Platform API
- * OpenAPI spec version: 0.1.0
+ * OpenAPI spec version: 0.2.0
  */
 export interface HealthStatus {
   status: string;
@@ -158,6 +158,32 @@ export interface LoanEligibilityResult {
   aiExplanation: string;
 }
 
+export interface LoanOffersBody {
+  totalCost: number;
+  expectedSalary: number;
+  riskLevel?: string;
+  hasCoApplicant?: boolean;
+  targetCountry?: string;
+  scholarshipAvailable?: number;
+}
+
+export interface LoanOffer {
+  provider: string;
+  type: string;
+  amount: string;
+  interestRate?: string;
+  tenure?: string;
+  pros?: string[];
+  cons?: string[];
+  suitability: string;
+}
+
+export interface LoanOffersResult {
+  offers: LoanOffer[];
+  recommendation: string;
+  bestOption: string;
+}
+
 export interface DashboardSummary {
   totalAssessments: number;
   avgPlacementScore: number;
@@ -190,4 +216,196 @@ export interface RiskBreakdown {
   level: string;
   count: number;
   percentage: number;
+}
+
+export interface SmartNudge {
+  id: string;
+  type: string;
+  title: string;
+  message: string;
+  priority: string;
+  action?: string;
+  actionLabel?: string;
+}
+
+export interface TimelineBody {
+  targetIntake: string;
+  targetCountry: string;
+  targetCourse?: string;
+  currentStatus?: string;
+  hasIelts?: boolean;
+  hasGre?: boolean;
+  cgpa?: number;
+}
+
+export interface TimelinePhase {
+  phase: string;
+  title: string;
+  startWeek: number;
+  endWeek: number;
+  tasks: string[];
+  color: string;
+  status: string;
+}
+
+export interface TimelineResult {
+  phases: TimelinePhase[];
+  totalWeeks: number;
+  intakeDate?: string;
+  urgencyLevel: string;
+  summary: string;
+}
+
+export interface ChecklistBody {
+  targetCountry: string;
+  degree?: string;
+  hasLoanRequirement?: boolean;
+}
+
+export interface ChecklistItem {
+  id: string;
+  name: string;
+  description?: string;
+  isCritical: boolean;
+  tip?: string;
+}
+
+export interface ChecklistCategory {
+  category: string;
+  icon: string;
+  items: ChecklistItem[];
+}
+
+export interface ChecklistResult {
+  categories: ChecklistCategory[];
+  totalDocuments: number;
+  criticalCount: number;
+}
+
+export interface SopGuideBody {
+  degree?: string;
+  targetCourse: string;
+  targetUniversity?: string;
+  cgpa?: number;
+  careerGoal?: string;
+}
+
+export interface SopSection {
+  section: string;
+  title: string;
+  wordCount: number;
+  guidance: string;
+  keyPoints: string[];
+}
+
+export interface SopGuideResult {
+  structure: SopSection[];
+  tips: string[];
+  commonMistakes: string[];
+  wordCountTarget: number;
+  sampleOpener?: string;
+}
+
+export interface ChatMessage {
+  role: string;
+  content: string;
+}
+
+export interface CopilotMessageBody {
+  message: string;
+  context?: string;
+  history?: ChatMessage[];
+}
+
+export interface CopilotMessageResult {
+  reply: string;
+  suggestions: string[];
+  relatedModule?: string;
+}
+
+export interface Badge {
+  id: string;
+  name: string;
+  description: string;
+  icon: string;
+  earnedAt?: string;
+  rarity: string;
+  isEarned: boolean;
+}
+
+export interface GamificationProfile {
+  level: number;
+  levelTitle: string;
+  xp: number;
+  xpToNextLevel: number;
+  streakDays: number;
+  badges: Badge[];
+  completedModules?: string[];
+  progressPercent: number;
+  rank?: number;
+}
+
+export interface LeaderboardEntry {
+  rank: number;
+  name: string;
+  xp: number;
+  level: number;
+  badges: number;
+  targetCountry?: string;
+}
+
+export interface ScholarshipMatchBody {
+  cgpa: number;
+  degree: string;
+  targetCountry?: string;
+  field?: string;
+  nationality?: string;
+  financialNeed?: boolean;
+}
+
+export interface Scholarship {
+  id: string;
+  name: string;
+  provider: string;
+  country: string;
+  amount: string;
+  coverage?: string;
+  eligibility?: string;
+  deadline?: string;
+  matchScore: number;
+  type: string;
+  applicationUrl?: string;
+}
+
+export interface ScholarshipMatchResult {
+  scholarships: Scholarship[];
+  totalValue: string;
+  summary: string;
+}
+
+export interface VisaGuideBody {
+  country: string;
+  degree?: string;
+  intakeMonth?: string;
+  nationality?: string;
+}
+
+export interface VisaStep {
+  step: number;
+  title: string;
+  description: string;
+  timeframe: string;
+  critical: boolean;
+}
+
+export interface VisaGuideResult {
+  country: string;
+  visaType: string;
+  processingTime: string;
+  fee?: string;
+  steps: VisaStep[];
+  requiredDocuments: string[];
+  tips: string[];
+  successRate?: number;
+  postStudyWork?: string;
 }

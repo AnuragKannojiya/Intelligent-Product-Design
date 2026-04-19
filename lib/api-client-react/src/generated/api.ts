@@ -3,7 +3,7 @@
  * Do not edit manually.
  * Api
  * GradPath AI – Career to Loan Intelligence Platform API
- * OpenAPI spec version: 0.1.0
+ * OpenAPI spec version: 0.2.0
  */
 import { useMutation, useQuery } from "@tanstack/react-query";
 import type {
@@ -20,16 +20,33 @@ import type {
   AssessmentSummary,
   CareerRecommendationBody,
   CareerRecommendationResult,
+  ChecklistBody,
+  ChecklistResult,
+  CopilotMessageBody,
+  CopilotMessageResult,
   CountryDistribution,
   CreateProfileBody,
   DashboardSummary,
+  GamificationProfile,
   HealthStatus,
+  LeaderboardEntry,
   LoanEligibilityBody,
   LoanEligibilityResult,
+  LoanOffersBody,
+  LoanOffersResult,
   RiskBreakdown,
   RoiPredictionBody,
   RoiPredictionResult,
+  ScholarshipMatchBody,
+  ScholarshipMatchResult,
+  SmartNudge,
+  SopGuideBody,
+  SopGuideResult,
   StudentProfile,
+  TimelineBody,
+  TimelineResult,
+  VisaGuideBody,
+  VisaGuideResult,
 } from "./api.schemas";
 
 import { customFetch } from "../custom-fetch";
@@ -117,7 +134,7 @@ export function useHealthCheck<
 }
 
 /**
- * @summary Create or update student profile
+ * @summary Create student profile
  */
 export const getCreateProfileUrl = () => {
   return `/api/profile`;
@@ -180,7 +197,7 @@ export type CreateProfileMutationBody = BodyType<CreateProfileBody>;
 export type CreateProfileMutationError = ErrorType<unknown>;
 
 /**
- * @summary Create or update student profile
+ * @summary Create student profile
  */
 export const useCreateProfile = <
   TError = ErrorType<unknown>,
@@ -365,7 +382,7 @@ export function useGetProfile<
 }
 
 /**
- * @summary Get AI career recommendations (countries, courses, universities)
+ * @summary Get AI career recommendations
  */
 export const getGetCareerRecommendationsUrl = () => {
   return `/api/career/recommend`;
@@ -432,7 +449,7 @@ export type GetCareerRecommendationsMutationBody =
 export type GetCareerRecommendationsMutationError = ErrorType<unknown>;
 
 /**
- * @summary Get AI career recommendations (countries, courses, universities)
+ * @summary Get AI career recommendations
  */
 export const useGetCareerRecommendations = <
   TError = ErrorType<unknown>,
@@ -455,7 +472,7 @@ export const useGetCareerRecommendations = <
 };
 
 /**
- * @summary Get ROI, salary, and placement prediction
+ * @summary Get ROI and placement prediction
  */
 export const getGetRoiPredictionUrl = () => {
   return `/api/roi/predict`;
@@ -518,7 +535,7 @@ export type GetRoiPredictionMutationBody = BodyType<RoiPredictionBody>;
 export type GetRoiPredictionMutationError = ErrorType<unknown>;
 
 /**
- * @summary Get ROI, salary, and placement prediction
+ * @summary Get ROI and placement prediction
  */
 export const useGetRoiPrediction = <
   TError = ErrorType<unknown>,
@@ -627,7 +644,93 @@ export const useGetLoanEligibility = <
 };
 
 /**
- * @summary Get platform-level dashboard summary stats
+ * @summary Get alternative loan and funding offer recommendations
+ */
+export const getGetLoanOffersUrl = () => {
+  return `/api/loan/offers`;
+};
+
+export const getLoanOffers = async (
+  loanOffersBody: LoanOffersBody,
+  options?: RequestInit,
+): Promise<LoanOffersResult> => {
+  return customFetch<LoanOffersResult>(getGetLoanOffersUrl(), {
+    ...options,
+    method: "POST",
+    headers: { "Content-Type": "application/json", ...options?.headers },
+    body: JSON.stringify(loanOffersBody),
+  });
+};
+
+export const getGetLoanOffersMutationOptions = <
+  TError = ErrorType<unknown>,
+  TContext = unknown,
+>(options?: {
+  mutation?: UseMutationOptions<
+    Awaited<ReturnType<typeof getLoanOffers>>,
+    TError,
+    { data: BodyType<LoanOffersBody> },
+    TContext
+  >;
+  request?: SecondParameter<typeof customFetch>;
+}): UseMutationOptions<
+  Awaited<ReturnType<typeof getLoanOffers>>,
+  TError,
+  { data: BodyType<LoanOffersBody> },
+  TContext
+> => {
+  const mutationKey = ["getLoanOffers"];
+  const { mutation: mutationOptions, request: requestOptions } = options
+    ? options.mutation &&
+      "mutationKey" in options.mutation &&
+      options.mutation.mutationKey
+      ? options
+      : { ...options, mutation: { ...options.mutation, mutationKey } }
+    : { mutation: { mutationKey }, request: undefined };
+
+  const mutationFn: MutationFunction<
+    Awaited<ReturnType<typeof getLoanOffers>>,
+    { data: BodyType<LoanOffersBody> }
+  > = (props) => {
+    const { data } = props ?? {};
+
+    return getLoanOffers(data, requestOptions);
+  };
+
+  return { mutationFn, ...mutationOptions };
+};
+
+export type GetLoanOffersMutationResult = NonNullable<
+  Awaited<ReturnType<typeof getLoanOffers>>
+>;
+export type GetLoanOffersMutationBody = BodyType<LoanOffersBody>;
+export type GetLoanOffersMutationError = ErrorType<unknown>;
+
+/**
+ * @summary Get alternative loan and funding offer recommendations
+ */
+export const useGetLoanOffers = <
+  TError = ErrorType<unknown>,
+  TContext = unknown,
+>(options?: {
+  mutation?: UseMutationOptions<
+    Awaited<ReturnType<typeof getLoanOffers>>,
+    TError,
+    { data: BodyType<LoanOffersBody> },
+    TContext
+  >;
+  request?: SecondParameter<typeof customFetch>;
+}): UseMutationResult<
+  Awaited<ReturnType<typeof getLoanOffers>>,
+  TError,
+  { data: BodyType<LoanOffersBody> },
+  TContext
+> => {
+  return useMutation(getGetLoanOffersMutationOptions(options));
+};
+
+/**
+ * @summary Get platform dashboard summary
  */
 export const getGetDashboardSummaryUrl = () => {
   return `/api/dashboard/summary`;
@@ -678,7 +781,7 @@ export type GetDashboardSummaryQueryResult = NonNullable<
 export type GetDashboardSummaryQueryError = ErrorType<unknown>;
 
 /**
- * @summary Get platform-level dashboard summary stats
+ * @summary Get platform dashboard summary
  */
 
 export function useGetDashboardSummary<
@@ -926,3 +1029,745 @@ export function useGetRiskBreakdown<
 
   return { ...query, queryKey: queryOptions.queryKey };
 }
+
+/**
+ * @summary Get smart nudges and action suggestions
+ */
+export const getGetDashboardNudgesUrl = () => {
+  return `/api/dashboard/nudges`;
+};
+
+export const getDashboardNudges = async (
+  options?: RequestInit,
+): Promise<SmartNudge[]> => {
+  return customFetch<SmartNudge[]>(getGetDashboardNudgesUrl(), {
+    ...options,
+    method: "GET",
+  });
+};
+
+export const getGetDashboardNudgesQueryKey = () => {
+  return [`/api/dashboard/nudges`] as const;
+};
+
+export const getGetDashboardNudgesQueryOptions = <
+  TData = Awaited<ReturnType<typeof getDashboardNudges>>,
+  TError = ErrorType<unknown>,
+>(options?: {
+  query?: UseQueryOptions<
+    Awaited<ReturnType<typeof getDashboardNudges>>,
+    TError,
+    TData
+  >;
+  request?: SecondParameter<typeof customFetch>;
+}) => {
+  const { query: queryOptions, request: requestOptions } = options ?? {};
+
+  const queryKey = queryOptions?.queryKey ?? getGetDashboardNudgesQueryKey();
+
+  const queryFn: QueryFunction<
+    Awaited<ReturnType<typeof getDashboardNudges>>
+  > = ({ signal }) => getDashboardNudges({ signal, ...requestOptions });
+
+  return { queryKey, queryFn, ...queryOptions } as UseQueryOptions<
+    Awaited<ReturnType<typeof getDashboardNudges>>,
+    TError,
+    TData
+  > & { queryKey: QueryKey };
+};
+
+export type GetDashboardNudgesQueryResult = NonNullable<
+  Awaited<ReturnType<typeof getDashboardNudges>>
+>;
+export type GetDashboardNudgesQueryError = ErrorType<unknown>;
+
+/**
+ * @summary Get smart nudges and action suggestions
+ */
+
+export function useGetDashboardNudges<
+  TData = Awaited<ReturnType<typeof getDashboardNudges>>,
+  TError = ErrorType<unknown>,
+>(options?: {
+  query?: UseQueryOptions<
+    Awaited<ReturnType<typeof getDashboardNudges>>,
+    TError,
+    TData
+  >;
+  request?: SecondParameter<typeof customFetch>;
+}): UseQueryResult<TData, TError> & { queryKey: QueryKey } {
+  const queryOptions = getGetDashboardNudgesQueryOptions(options);
+
+  const query = useQuery(queryOptions) as UseQueryResult<TData, TError> & {
+    queryKey: QueryKey;
+  };
+
+  return { ...query, queryKey: queryOptions.queryKey };
+}
+
+/**
+ * @summary Generate personalized application timeline
+ */
+export const getGenerateTimelineUrl = () => {
+  return `/api/journey/timeline`;
+};
+
+export const generateTimeline = async (
+  timelineBody: TimelineBody,
+  options?: RequestInit,
+): Promise<TimelineResult> => {
+  return customFetch<TimelineResult>(getGenerateTimelineUrl(), {
+    ...options,
+    method: "POST",
+    headers: { "Content-Type": "application/json", ...options?.headers },
+    body: JSON.stringify(timelineBody),
+  });
+};
+
+export const getGenerateTimelineMutationOptions = <
+  TError = ErrorType<unknown>,
+  TContext = unknown,
+>(options?: {
+  mutation?: UseMutationOptions<
+    Awaited<ReturnType<typeof generateTimeline>>,
+    TError,
+    { data: BodyType<TimelineBody> },
+    TContext
+  >;
+  request?: SecondParameter<typeof customFetch>;
+}): UseMutationOptions<
+  Awaited<ReturnType<typeof generateTimeline>>,
+  TError,
+  { data: BodyType<TimelineBody> },
+  TContext
+> => {
+  const mutationKey = ["generateTimeline"];
+  const { mutation: mutationOptions, request: requestOptions } = options
+    ? options.mutation &&
+      "mutationKey" in options.mutation &&
+      options.mutation.mutationKey
+      ? options
+      : { ...options, mutation: { ...options.mutation, mutationKey } }
+    : { mutation: { mutationKey }, request: undefined };
+
+  const mutationFn: MutationFunction<
+    Awaited<ReturnType<typeof generateTimeline>>,
+    { data: BodyType<TimelineBody> }
+  > = (props) => {
+    const { data } = props ?? {};
+
+    return generateTimeline(data, requestOptions);
+  };
+
+  return { mutationFn, ...mutationOptions };
+};
+
+export type GenerateTimelineMutationResult = NonNullable<
+  Awaited<ReturnType<typeof generateTimeline>>
+>;
+export type GenerateTimelineMutationBody = BodyType<TimelineBody>;
+export type GenerateTimelineMutationError = ErrorType<unknown>;
+
+/**
+ * @summary Generate personalized application timeline
+ */
+export const useGenerateTimeline = <
+  TError = ErrorType<unknown>,
+  TContext = unknown,
+>(options?: {
+  mutation?: UseMutationOptions<
+    Awaited<ReturnType<typeof generateTimeline>>,
+    TError,
+    { data: BodyType<TimelineBody> },
+    TContext
+  >;
+  request?: SecondParameter<typeof customFetch>;
+}): UseMutationResult<
+  Awaited<ReturnType<typeof generateTimeline>>,
+  TError,
+  { data: BodyType<TimelineBody> },
+  TContext
+> => {
+  return useMutation(getGenerateTimelineMutationOptions(options));
+};
+
+/**
+ * @summary Get document checklist for target country
+ */
+export const getGetDocumentChecklistUrl = () => {
+  return `/api/journey/checklist`;
+};
+
+export const getDocumentChecklist = async (
+  checklistBody: ChecklistBody,
+  options?: RequestInit,
+): Promise<ChecklistResult> => {
+  return customFetch<ChecklistResult>(getGetDocumentChecklistUrl(), {
+    ...options,
+    method: "POST",
+    headers: { "Content-Type": "application/json", ...options?.headers },
+    body: JSON.stringify(checklistBody),
+  });
+};
+
+export const getGetDocumentChecklistMutationOptions = <
+  TError = ErrorType<unknown>,
+  TContext = unknown,
+>(options?: {
+  mutation?: UseMutationOptions<
+    Awaited<ReturnType<typeof getDocumentChecklist>>,
+    TError,
+    { data: BodyType<ChecklistBody> },
+    TContext
+  >;
+  request?: SecondParameter<typeof customFetch>;
+}): UseMutationOptions<
+  Awaited<ReturnType<typeof getDocumentChecklist>>,
+  TError,
+  { data: BodyType<ChecklistBody> },
+  TContext
+> => {
+  const mutationKey = ["getDocumentChecklist"];
+  const { mutation: mutationOptions, request: requestOptions } = options
+    ? options.mutation &&
+      "mutationKey" in options.mutation &&
+      options.mutation.mutationKey
+      ? options
+      : { ...options, mutation: { ...options.mutation, mutationKey } }
+    : { mutation: { mutationKey }, request: undefined };
+
+  const mutationFn: MutationFunction<
+    Awaited<ReturnType<typeof getDocumentChecklist>>,
+    { data: BodyType<ChecklistBody> }
+  > = (props) => {
+    const { data } = props ?? {};
+
+    return getDocumentChecklist(data, requestOptions);
+  };
+
+  return { mutationFn, ...mutationOptions };
+};
+
+export type GetDocumentChecklistMutationResult = NonNullable<
+  Awaited<ReturnType<typeof getDocumentChecklist>>
+>;
+export type GetDocumentChecklistMutationBody = BodyType<ChecklistBody>;
+export type GetDocumentChecklistMutationError = ErrorType<unknown>;
+
+/**
+ * @summary Get document checklist for target country
+ */
+export const useGetDocumentChecklist = <
+  TError = ErrorType<unknown>,
+  TContext = unknown,
+>(options?: {
+  mutation?: UseMutationOptions<
+    Awaited<ReturnType<typeof getDocumentChecklist>>,
+    TError,
+    { data: BodyType<ChecklistBody> },
+    TContext
+  >;
+  request?: SecondParameter<typeof customFetch>;
+}): UseMutationResult<
+  Awaited<ReturnType<typeof getDocumentChecklist>>,
+  TError,
+  { data: BodyType<ChecklistBody> },
+  TContext
+> => {
+  return useMutation(getGetDocumentChecklistMutationOptions(options));
+};
+
+/**
+ * @summary Get SOP writing guide and structure
+ */
+export const getGetSopGuideUrl = () => {
+  return `/api/journey/sop-guide`;
+};
+
+export const getSopGuide = async (
+  sopGuideBody: SopGuideBody,
+  options?: RequestInit,
+): Promise<SopGuideResult> => {
+  return customFetch<SopGuideResult>(getGetSopGuideUrl(), {
+    ...options,
+    method: "POST",
+    headers: { "Content-Type": "application/json", ...options?.headers },
+    body: JSON.stringify(sopGuideBody),
+  });
+};
+
+export const getGetSopGuideMutationOptions = <
+  TError = ErrorType<unknown>,
+  TContext = unknown,
+>(options?: {
+  mutation?: UseMutationOptions<
+    Awaited<ReturnType<typeof getSopGuide>>,
+    TError,
+    { data: BodyType<SopGuideBody> },
+    TContext
+  >;
+  request?: SecondParameter<typeof customFetch>;
+}): UseMutationOptions<
+  Awaited<ReturnType<typeof getSopGuide>>,
+  TError,
+  { data: BodyType<SopGuideBody> },
+  TContext
+> => {
+  const mutationKey = ["getSopGuide"];
+  const { mutation: mutationOptions, request: requestOptions } = options
+    ? options.mutation &&
+      "mutationKey" in options.mutation &&
+      options.mutation.mutationKey
+      ? options
+      : { ...options, mutation: { ...options.mutation, mutationKey } }
+    : { mutation: { mutationKey }, request: undefined };
+
+  const mutationFn: MutationFunction<
+    Awaited<ReturnType<typeof getSopGuide>>,
+    { data: BodyType<SopGuideBody> }
+  > = (props) => {
+    const { data } = props ?? {};
+
+    return getSopGuide(data, requestOptions);
+  };
+
+  return { mutationFn, ...mutationOptions };
+};
+
+export type GetSopGuideMutationResult = NonNullable<
+  Awaited<ReturnType<typeof getSopGuide>>
+>;
+export type GetSopGuideMutationBody = BodyType<SopGuideBody>;
+export type GetSopGuideMutationError = ErrorType<unknown>;
+
+/**
+ * @summary Get SOP writing guide and structure
+ */
+export const useGetSopGuide = <
+  TError = ErrorType<unknown>,
+  TContext = unknown,
+>(options?: {
+  mutation?: UseMutationOptions<
+    Awaited<ReturnType<typeof getSopGuide>>,
+    TError,
+    { data: BodyType<SopGuideBody> },
+    TContext
+  >;
+  request?: SecondParameter<typeof customFetch>;
+}): UseMutationResult<
+  Awaited<ReturnType<typeof getSopGuide>>,
+  TError,
+  { data: BodyType<SopGuideBody> },
+  TContext
+> => {
+  return useMutation(getGetSopGuideMutationOptions(options));
+};
+
+/**
+ * @summary Send a message to the AI copilot
+ */
+export const getSendCopilotMessageUrl = () => {
+  return `/api/copilot/chat`;
+};
+
+export const sendCopilotMessage = async (
+  copilotMessageBody: CopilotMessageBody,
+  options?: RequestInit,
+): Promise<CopilotMessageResult> => {
+  return customFetch<CopilotMessageResult>(getSendCopilotMessageUrl(), {
+    ...options,
+    method: "POST",
+    headers: { "Content-Type": "application/json", ...options?.headers },
+    body: JSON.stringify(copilotMessageBody),
+  });
+};
+
+export const getSendCopilotMessageMutationOptions = <
+  TError = ErrorType<unknown>,
+  TContext = unknown,
+>(options?: {
+  mutation?: UseMutationOptions<
+    Awaited<ReturnType<typeof sendCopilotMessage>>,
+    TError,
+    { data: BodyType<CopilotMessageBody> },
+    TContext
+  >;
+  request?: SecondParameter<typeof customFetch>;
+}): UseMutationOptions<
+  Awaited<ReturnType<typeof sendCopilotMessage>>,
+  TError,
+  { data: BodyType<CopilotMessageBody> },
+  TContext
+> => {
+  const mutationKey = ["sendCopilotMessage"];
+  const { mutation: mutationOptions, request: requestOptions } = options
+    ? options.mutation &&
+      "mutationKey" in options.mutation &&
+      options.mutation.mutationKey
+      ? options
+      : { ...options, mutation: { ...options.mutation, mutationKey } }
+    : { mutation: { mutationKey }, request: undefined };
+
+  const mutationFn: MutationFunction<
+    Awaited<ReturnType<typeof sendCopilotMessage>>,
+    { data: BodyType<CopilotMessageBody> }
+  > = (props) => {
+    const { data } = props ?? {};
+
+    return sendCopilotMessage(data, requestOptions);
+  };
+
+  return { mutationFn, ...mutationOptions };
+};
+
+export type SendCopilotMessageMutationResult = NonNullable<
+  Awaited<ReturnType<typeof sendCopilotMessage>>
+>;
+export type SendCopilotMessageMutationBody = BodyType<CopilotMessageBody>;
+export type SendCopilotMessageMutationError = ErrorType<unknown>;
+
+/**
+ * @summary Send a message to the AI copilot
+ */
+export const useSendCopilotMessage = <
+  TError = ErrorType<unknown>,
+  TContext = unknown,
+>(options?: {
+  mutation?: UseMutationOptions<
+    Awaited<ReturnType<typeof sendCopilotMessage>>,
+    TError,
+    { data: BodyType<CopilotMessageBody> },
+    TContext
+  >;
+  request?: SecondParameter<typeof customFetch>;
+}): UseMutationResult<
+  Awaited<ReturnType<typeof sendCopilotMessage>>,
+  TError,
+  { data: BodyType<CopilotMessageBody> },
+  TContext
+> => {
+  return useMutation(getSendCopilotMessageMutationOptions(options));
+};
+
+/**
+ * @summary Get user gamification profile badges and streak
+ */
+export const getGetGamificationProfileUrl = () => {
+  return `/api/gamification/profile`;
+};
+
+export const getGamificationProfile = async (
+  options?: RequestInit,
+): Promise<GamificationProfile> => {
+  return customFetch<GamificationProfile>(getGetGamificationProfileUrl(), {
+    ...options,
+    method: "GET",
+  });
+};
+
+export const getGetGamificationProfileQueryKey = () => {
+  return [`/api/gamification/profile`] as const;
+};
+
+export const getGetGamificationProfileQueryOptions = <
+  TData = Awaited<ReturnType<typeof getGamificationProfile>>,
+  TError = ErrorType<unknown>,
+>(options?: {
+  query?: UseQueryOptions<
+    Awaited<ReturnType<typeof getGamificationProfile>>,
+    TError,
+    TData
+  >;
+  request?: SecondParameter<typeof customFetch>;
+}) => {
+  const { query: queryOptions, request: requestOptions } = options ?? {};
+
+  const queryKey =
+    queryOptions?.queryKey ?? getGetGamificationProfileQueryKey();
+
+  const queryFn: QueryFunction<
+    Awaited<ReturnType<typeof getGamificationProfile>>
+  > = ({ signal }) => getGamificationProfile({ signal, ...requestOptions });
+
+  return { queryKey, queryFn, ...queryOptions } as UseQueryOptions<
+    Awaited<ReturnType<typeof getGamificationProfile>>,
+    TError,
+    TData
+  > & { queryKey: QueryKey };
+};
+
+export type GetGamificationProfileQueryResult = NonNullable<
+  Awaited<ReturnType<typeof getGamificationProfile>>
+>;
+export type GetGamificationProfileQueryError = ErrorType<unknown>;
+
+/**
+ * @summary Get user gamification profile badges and streak
+ */
+
+export function useGetGamificationProfile<
+  TData = Awaited<ReturnType<typeof getGamificationProfile>>,
+  TError = ErrorType<unknown>,
+>(options?: {
+  query?: UseQueryOptions<
+    Awaited<ReturnType<typeof getGamificationProfile>>,
+    TError,
+    TData
+  >;
+  request?: SecondParameter<typeof customFetch>;
+}): UseQueryResult<TData, TError> & { queryKey: QueryKey } {
+  const queryOptions = getGetGamificationProfileQueryOptions(options);
+
+  const query = useQuery(queryOptions) as UseQueryResult<TData, TError> & {
+    queryKey: QueryKey;
+  };
+
+  return { ...query, queryKey: queryOptions.queryKey };
+}
+
+/**
+ * @summary Get top students leaderboard
+ */
+export const getGetLeaderboardUrl = () => {
+  return `/api/gamification/leaderboard`;
+};
+
+export const getLeaderboard = async (
+  options?: RequestInit,
+): Promise<LeaderboardEntry[]> => {
+  return customFetch<LeaderboardEntry[]>(getGetLeaderboardUrl(), {
+    ...options,
+    method: "GET",
+  });
+};
+
+export const getGetLeaderboardQueryKey = () => {
+  return [`/api/gamification/leaderboard`] as const;
+};
+
+export const getGetLeaderboardQueryOptions = <
+  TData = Awaited<ReturnType<typeof getLeaderboard>>,
+  TError = ErrorType<unknown>,
+>(options?: {
+  query?: UseQueryOptions<
+    Awaited<ReturnType<typeof getLeaderboard>>,
+    TError,
+    TData
+  >;
+  request?: SecondParameter<typeof customFetch>;
+}) => {
+  const { query: queryOptions, request: requestOptions } = options ?? {};
+
+  const queryKey = queryOptions?.queryKey ?? getGetLeaderboardQueryKey();
+
+  const queryFn: QueryFunction<Awaited<ReturnType<typeof getLeaderboard>>> = ({
+    signal,
+  }) => getLeaderboard({ signal, ...requestOptions });
+
+  return { queryKey, queryFn, ...queryOptions } as UseQueryOptions<
+    Awaited<ReturnType<typeof getLeaderboard>>,
+    TError,
+    TData
+  > & { queryKey: QueryKey };
+};
+
+export type GetLeaderboardQueryResult = NonNullable<
+  Awaited<ReturnType<typeof getLeaderboard>>
+>;
+export type GetLeaderboardQueryError = ErrorType<unknown>;
+
+/**
+ * @summary Get top students leaderboard
+ */
+
+export function useGetLeaderboard<
+  TData = Awaited<ReturnType<typeof getLeaderboard>>,
+  TError = ErrorType<unknown>,
+>(options?: {
+  query?: UseQueryOptions<
+    Awaited<ReturnType<typeof getLeaderboard>>,
+    TError,
+    TData
+  >;
+  request?: SecondParameter<typeof customFetch>;
+}): UseQueryResult<TData, TError> & { queryKey: QueryKey } {
+  const queryOptions = getGetLeaderboardQueryOptions(options);
+
+  const query = useQuery(queryOptions) as UseQueryResult<TData, TError> & {
+    queryKey: QueryKey;
+  };
+
+  return { ...query, queryKey: queryOptions.queryKey };
+}
+
+/**
+ * @summary Match scholarships based on student profile
+ */
+export const getMatchScholarshipsUrl = () => {
+  return `/api/scholarship/match`;
+};
+
+export const matchScholarships = async (
+  scholarshipMatchBody: ScholarshipMatchBody,
+  options?: RequestInit,
+): Promise<ScholarshipMatchResult> => {
+  return customFetch<ScholarshipMatchResult>(getMatchScholarshipsUrl(), {
+    ...options,
+    method: "POST",
+    headers: { "Content-Type": "application/json", ...options?.headers },
+    body: JSON.stringify(scholarshipMatchBody),
+  });
+};
+
+export const getMatchScholarshipsMutationOptions = <
+  TError = ErrorType<unknown>,
+  TContext = unknown,
+>(options?: {
+  mutation?: UseMutationOptions<
+    Awaited<ReturnType<typeof matchScholarships>>,
+    TError,
+    { data: BodyType<ScholarshipMatchBody> },
+    TContext
+  >;
+  request?: SecondParameter<typeof customFetch>;
+}): UseMutationOptions<
+  Awaited<ReturnType<typeof matchScholarships>>,
+  TError,
+  { data: BodyType<ScholarshipMatchBody> },
+  TContext
+> => {
+  const mutationKey = ["matchScholarships"];
+  const { mutation: mutationOptions, request: requestOptions } = options
+    ? options.mutation &&
+      "mutationKey" in options.mutation &&
+      options.mutation.mutationKey
+      ? options
+      : { ...options, mutation: { ...options.mutation, mutationKey } }
+    : { mutation: { mutationKey }, request: undefined };
+
+  const mutationFn: MutationFunction<
+    Awaited<ReturnType<typeof matchScholarships>>,
+    { data: BodyType<ScholarshipMatchBody> }
+  > = (props) => {
+    const { data } = props ?? {};
+
+    return matchScholarships(data, requestOptions);
+  };
+
+  return { mutationFn, ...mutationOptions };
+};
+
+export type MatchScholarshipsMutationResult = NonNullable<
+  Awaited<ReturnType<typeof matchScholarships>>
+>;
+export type MatchScholarshipsMutationBody = BodyType<ScholarshipMatchBody>;
+export type MatchScholarshipsMutationError = ErrorType<unknown>;
+
+/**
+ * @summary Match scholarships based on student profile
+ */
+export const useMatchScholarships = <
+  TError = ErrorType<unknown>,
+  TContext = unknown,
+>(options?: {
+  mutation?: UseMutationOptions<
+    Awaited<ReturnType<typeof matchScholarships>>,
+    TError,
+    { data: BodyType<ScholarshipMatchBody> },
+    TContext
+  >;
+  request?: SecondParameter<typeof customFetch>;
+}): UseMutationResult<
+  Awaited<ReturnType<typeof matchScholarships>>,
+  TError,
+  { data: BodyType<ScholarshipMatchBody> },
+  TContext
+> => {
+  return useMutation(getMatchScholarshipsMutationOptions(options));
+};
+
+/**
+ * @summary Get visa guidance for target country
+ */
+export const getGetVisaGuideUrl = () => {
+  return `/api/visa/guide`;
+};
+
+export const getVisaGuide = async (
+  visaGuideBody: VisaGuideBody,
+  options?: RequestInit,
+): Promise<VisaGuideResult> => {
+  return customFetch<VisaGuideResult>(getGetVisaGuideUrl(), {
+    ...options,
+    method: "POST",
+    headers: { "Content-Type": "application/json", ...options?.headers },
+    body: JSON.stringify(visaGuideBody),
+  });
+};
+
+export const getGetVisaGuideMutationOptions = <
+  TError = ErrorType<unknown>,
+  TContext = unknown,
+>(options?: {
+  mutation?: UseMutationOptions<
+    Awaited<ReturnType<typeof getVisaGuide>>,
+    TError,
+    { data: BodyType<VisaGuideBody> },
+    TContext
+  >;
+  request?: SecondParameter<typeof customFetch>;
+}): UseMutationOptions<
+  Awaited<ReturnType<typeof getVisaGuide>>,
+  TError,
+  { data: BodyType<VisaGuideBody> },
+  TContext
+> => {
+  const mutationKey = ["getVisaGuide"];
+  const { mutation: mutationOptions, request: requestOptions } = options
+    ? options.mutation &&
+      "mutationKey" in options.mutation &&
+      options.mutation.mutationKey
+      ? options
+      : { ...options, mutation: { ...options.mutation, mutationKey } }
+    : { mutation: { mutationKey }, request: undefined };
+
+  const mutationFn: MutationFunction<
+    Awaited<ReturnType<typeof getVisaGuide>>,
+    { data: BodyType<VisaGuideBody> }
+  > = (props) => {
+    const { data } = props ?? {};
+
+    return getVisaGuide(data, requestOptions);
+  };
+
+  return { mutationFn, ...mutationOptions };
+};
+
+export type GetVisaGuideMutationResult = NonNullable<
+  Awaited<ReturnType<typeof getVisaGuide>>
+>;
+export type GetVisaGuideMutationBody = BodyType<VisaGuideBody>;
+export type GetVisaGuideMutationError = ErrorType<unknown>;
+
+/**
+ * @summary Get visa guidance for target country
+ */
+export const useGetVisaGuide = <
+  TError = ErrorType<unknown>,
+  TContext = unknown,
+>(options?: {
+  mutation?: UseMutationOptions<
+    Awaited<ReturnType<typeof getVisaGuide>>,
+    TError,
+    { data: BodyType<VisaGuideBody> },
+    TContext
+  >;
+  request?: SecondParameter<typeof customFetch>;
+}): UseMutationResult<
+  Awaited<ReturnType<typeof getVisaGuide>>,
+  TError,
+  { data: BodyType<VisaGuideBody> },
+  TContext
+> => {
+  return useMutation(getGetVisaGuideMutationOptions(options));
+};

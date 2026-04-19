@@ -38,15 +38,36 @@ A large-scale, enterprise-grade "Outcome-based Education Financing Platform" bui
 3. **Placement Risk Engine** — Low/Medium/High classification with explainability
 4. **Loan Readiness Engine** (`/loan`) — EMI scenarios, eligibility, readiness score
 
+### Module Architecture (20 Modules, Full List)
+
+**Core Modules:**
+1. Profile Intelligence — student data collection via /onboarding
+2. AI Career Navigator — `/career`
+3. Outcome Intelligence Engine — `/roi`
+4. Loan Readiness Engine — `/loan`
+
+**Supporting Modules:**
+5. Application Journey Copilot — `/journey` (timeline, checklist, SOP guide)
+6. AI Copilot Chatbot — floating widget on all pages (`AICopilotWidget.tsx`)
+7. Smart Nudge Engine — shown on `/dashboard` (action-oriented reminders)
+8. Gamification — `/gamification` (badges, XP, leaderboard, streaks)
+9. Scholarship Matching — `/scholarships`
+10. Visa Guidance — `/visa` (UK, USA, Canada, Germany, Australia, Ireland, Singapore)
+11. Offer Recommendation Engine — `/loan` (loan offers from NBFCs/banks + alternatives)
+
 ### Pages
 
 - `/` — Landing page with hero, 4 AI layers overview
 - `/onboarding` — Multi-step student profile form (3 steps)
-- `/dashboard` — Intelligence Hub with real data from DB
+- `/dashboard` — Intelligence Hub with Smart Nudges + real DB data
 - `/career` — AI Career Navigator
 - `/roi` — ROI & Outcome Intelligence
-- `/loan` — Loan Readiness Engine
+- `/loan` — Loan Readiness Engine + Offer Recommendations
 - `/profiles` — Student profiles directory
+- `/journey` — Application Journey Copilot (Timeline / Checklist / SOP Guide tabs)
+- `/scholarships` — Scholarship Matching Engine
+- `/visa` — Visa Guidance (step-by-step for 7 countries)
+- `/gamification` — Achievements, Badges, Leaderboard
 
 ### AI Engine (`artifacts/api-server/src/lib/ai-engine.ts`)
 

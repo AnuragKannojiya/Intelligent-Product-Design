@@ -1,0 +1,92 @@
+🏆 COMPLETE MODULE LIST (GradPath AI)
+🔷 CORE (MUST HAVE – WINNING MODULES)
+1. 🧠 Profile Intelligence Module
+user data collect karta hai
+academic + financial + behavior profile banata hai
+readiness stage detect karta hai
+2. 🎯 AI Career Navigator Module
+best country suggest karta hai
+course recommend karta hai
+university shortlist deta hai
+explanation bhi deta hai
+3. 📊 Outcome Intelligence Module (MOST IMPORTANT)
+salary prediction
+placement probability (3/6/12 months)
+risk score (low/medium/high)
+ROI calculation
+4. 💰 Loan Readiness Module
+loan eligibility
+EMI calculation
+affordability score
+loan readiness score
+🔷 SUPPORTING (STRONG DIFFERENTIATION)
+5. 🗺️ Application Journey Copilot
+timeline generator
+SOP guidance
+document checklist
+next steps suggestion
+6. 🤖 AI Copilot / Chatbot Module
+user queries handle karta hai
+personalized answers deta hai
+recommendations explain karta hai
+7. 🔔 Smart Nudge Engine
+reminders bhejta hai
+next action suggest karta hai
+engagement badhata hai
+8. 🧩 Personalization Engine
+har user ka dashboard alag banata hai
+behavior ke basis pe content show karta hai
+🔷 BUSINESS & GROWTH MODULES (ADVANCED)
+9. 📢 AI Marketing & Content Engine
+blogs generate karta hai
+reels/scripts banata hai
+email/newsletter content
+10. 🎮 Gamification Module
+progress tracking
+badges
+streak system
+11. 🔗 Referral System
+invite friends
+rewards system
+viral growth
+🔷 FINANCIAL INTELLIGENCE MODULES
+12. 📉 Risk Scoring Engine
+repayment risk detect karta hai
+lender ke liye useful
+13. 📈 EMI & Repayment Simulator
+different scenarios show karta hai
+stress level calculate karta hai
+14. 🏦 Offer Recommendation Engine
+best loan option suggest karta hai
+alternative funding bhi suggest karta hai
+🔷 SYSTEM / BACKEND MODULES
+15. 🔗 AI Orchestration Layer
+sab modules ko connect karta hai
+LLM + ML + logic combine karta hai
+16. 🗄️ Data Management Layer
+user data store
+recommendation data
+analytics
+17. 📊 Analytics & Monitoring Module
+user behavior track karta hai
+conversion rate
+drop-off points
+🔷 OPTIONAL (BONUS – HIGH LEVEL)
+18. 🎓 Scholarship Matching Module
+scholarships suggest karta hai
+19. 🌍 Visa Guidance Module
+visa process guide karta hai
+20. 📑 Document Auto-fill Module
+forms auto-fill karta hai
+🏆 FINAL STRUCTURE (SHORTLIST VERSION)
+
+👉 Agar time kam hai, ye 6 dikha:
+
+Profile Intelligence
+Career Navigator
+Outcome Engine
+Loan Readiness
+AI Copilot
+Application Copilot
+
+👉 Ye = perfect winning combo

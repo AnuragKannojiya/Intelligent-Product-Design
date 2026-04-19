@@ -1,6 +1,6 @@
 import { Link, useLocation } from "wouter";
 import { cn } from "@/lib/utils";
-import { LayoutDashboard, Compass, TrendingUp, Calculator, Users, LogOut, Hexagon } from "lucide-react";
+import { LayoutDashboard, Compass, TrendingUp, Calculator, Users, LogOut, Hexagon, Route as RouteIcon, GraduationCap, Plane, Trophy } from "lucide-react";
 import { Button } from "@/components/ui/button";
 
 const navItems = [
@@ -8,6 +8,10 @@ const navItems = [
   { href: "/career", label: "Career Navigator", icon: Compass },
   { href: "/roi", label: "ROI Engine", icon: TrendingUp },
   { href: "/loan", label: "Loan Readiness", icon: Calculator },
+  { href: "/journey", label: "Journey Copilot", icon: RouteIcon },
+  { href: "/scholarships", label: "Scholarships", icon: GraduationCap },
+  { href: "/visa", label: "Visa Guide", icon: Plane },
+  { href: "/gamification", label: "Achievements", icon: Trophy },
   { href: "/profiles", label: "Student Profiles", icon: Users },
 ];
 

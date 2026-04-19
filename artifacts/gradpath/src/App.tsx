@@ -11,6 +11,11 @@ import Profiles from "@/pages/profiles";
 import CareerNavigator from "@/pages/career";
 import RoiEngine from "@/pages/roi";
 import LoanEngine from "@/pages/loan";
+import JourneyCopilot from "@/pages/journey";
+import Scholarships from "@/pages/scholarships";
+import VisaGuide from "@/pages/visa";
+import Gamification from "@/pages/gamification";
+import AICopilotWidget from "@/components/AICopilotWidget";
 
 const queryClient = new QueryClient({
   defaultOptions: {
@@ -31,6 +36,10 @@ function Router() {
       <Route path="/career" component={CareerNavigator} />
       <Route path="/roi" component={RoiEngine} />
       <Route path="/loan" component={LoanEngine} />
+      <Route path="/journey" component={JourneyCopilot} />
+      <Route path="/scholarships" component={Scholarships} />
+      <Route path="/visa" component={VisaGuide} />
+      <Route path="/gamification" component={Gamification} />
       <Route component={NotFound} />
     </Switch>
   );
@@ -44,6 +53,7 @@ function App() {
           <Router />
         </WouterRouter>
         <Toaster />
+        <AICopilotWidget />
       </TooltipProvider>
     </QueryClientProvider>
   );

@@ -3,7 +3,7 @@
  * Do not edit manually.
  * Api
  * GradPath AI – Career to Loan Intelligence Platform API
- * OpenAPI spec version: 0.1.0
+ * OpenAPI spec version: 0.2.0
  */
 import * as zod from "zod";
 
@@ -15,7 +15,7 @@ export const HealthCheckResponse = zod.object({
 });
 
 /**
- * @summary Create or update student profile
+ * @summary Create student profile
  */
 export const CreateProfileBody = zod.object({
   name: zod.string(),
@@ -81,7 +81,7 @@ export const GetProfileResponse = zod.object({
 });
 
 /**
- * @summary Get AI career recommendations (countries, courses, universities)
+ * @summary Get AI career recommendations
  */
 export const GetCareerRecommendationsBody = zod.object({
   cgpa: zod.number(),
@@ -132,7 +132,7 @@ export const GetCareerRecommendationsResponse = zod.object({
 });
 
 /**
- * @summary Get ROI, salary, and placement prediction
+ * @summary Get ROI and placement prediction
  */
 export const GetRoiPredictionBody = zod.object({
   cgpa: zod.number(),
@@ -207,7 +207,36 @@ export const GetLoanEligibilityResponse = zod.object({
 });
 
 /**
- * @summary Get platform-level dashboard summary stats
+ * @summary Get alternative loan and funding offer recommendations
+ */
+export const GetLoanOffersBody = zod.object({
+  totalCost: zod.number(),
+  expectedSalary: zod.number(),
+  riskLevel: zod.string().optional(),
+  hasCoApplicant: zod.boolean().optional(),
+  targetCountry: zod.string().optional(),
+  scholarshipAvailable: zod.number().optional(),
+});
+
+export const GetLoanOffersResponse = zod.object({
+  offers: zod.array(
+    zod.object({
+      provider: zod.string(),
+      type: zod.string(),
+      amount: zod.string(),
+      interestRate: zod.string().optional(),
+      tenure: zod.string().optional(),
+      pros: zod.array(zod.string()).optional(),
+      cons: zod.array(zod.string()).optional(),
+      suitability: zod.string(),
+    }),
+  ),
+  recommendation: zod.string(),
+  bestOption: zod.string(),
+});
+
+/**
+ * @summary Get platform dashboard summary
  */
 export const GetDashboardSummaryResponse = zod.object({
   totalAssessments: zod.number(),
@@ -258,3 +287,228 @@ export const GetRiskBreakdownResponseItem = zod.object({
   percentage: zod.number(),
 });
 export const GetRiskBreakdownResponse = zod.array(GetRiskBreakdownResponseItem);
+
+/**
+ * @summary Get smart nudges and action suggestions
+ */
+export const GetDashboardNudgesResponseItem = zod.object({
+  id: zod.string(),
+  type: zod.string(),
+  title: zod.string(),
+  message: zod.string(),
+  priority: zod.string(),
+  action: zod.string().optional(),
+  actionLabel: zod.string().optional(),
+});
+export const GetDashboardNudgesResponse = zod.array(
+  GetDashboardNudgesResponseItem,
+);
+
+/**
+ * @summary Generate personalized application timeline
+ */
+export const GenerateTimelineBody = zod.object({
+  targetIntake: zod.string(),
+  targetCountry: zod.string(),
+  targetCourse: zod.string().optional(),
+  currentStatus: zod.string().optional(),
+  hasIelts: zod.boolean().optional(),
+  hasGre: zod.boolean().optional(),
+  cgpa: zod.number().optional(),
+});
+
+export const GenerateTimelineResponse = zod.object({
+  phases: zod.array(
+    zod.object({
+      phase: zod.string(),
+      title: zod.string(),
+      startWeek: zod.number(),
+      endWeek: zod.number(),
+      tasks: zod.array(zod.string()),
+      color: zod.string(),
+      status: zod.string(),
+    }),
+  ),
+  totalWeeks: zod.number(),
+  intakeDate: zod.string().optional(),
+  urgencyLevel: zod.string(),
+  summary: zod.string(),
+});
+
+/**
+ * @summary Get document checklist for target country
+ */
+export const GetDocumentChecklistBody = zod.object({
+  targetCountry: zod.string(),
+  degree: zod.string().optional(),
+  hasLoanRequirement: zod.boolean().optional(),
+});
+
+export const GetDocumentChecklistResponse = zod.object({
+  categories: zod.array(
+    zod.object({
+      category: zod.string(),
+      icon: zod.string(),
+      items: zod.array(
+        zod.object({
+          id: zod.string(),
+          name: zod.string(),
+          description: zod.string().optional(),
+          isCritical: zod.boolean(),
+          tip: zod.string().optional(),
+        }),
+      ),
+    }),
+  ),
+  totalDocuments: zod.number(),
+  criticalCount: zod.number(),
+});
+
+/**
+ * @summary Get SOP writing guide and structure
+ */
+export const GetSopGuideBody = zod.object({
+  degree: zod.string().optional(),
+  targetCourse: zod.string(),
+  targetUniversity: zod.string().optional(),
+  cgpa: zod.number().optional(),
+  careerGoal: zod.string().optional(),
+});
+
+export const GetSopGuideResponse = zod.object({
+  structure: zod.array(
+    zod.object({
+      section: zod.string(),
+      title: zod.string(),
+      wordCount: zod.number(),
+      guidance: zod.string(),
+      keyPoints: zod.array(zod.string()),
+    }),
+  ),
+  tips: zod.array(zod.string()),
+  commonMistakes: zod.array(zod.string()),
+  wordCountTarget: zod.number(),
+  sampleOpener: zod.string().optional(),
+});
+
+/**
+ * @summary Send a message to the AI copilot
+ */
+export const SendCopilotMessageBody = zod.object({
+  message: zod.string(),
+  context: zod.string().optional(),
+  history: zod
+    .array(
+      zod.object({
+        role: zod.string(),
+        content: zod.string(),
+      }),
+    )
+    .optional(),
+});
+
+export const SendCopilotMessageResponse = zod.object({
+  reply: zod.string(),
+  suggestions: zod.array(zod.string()),
+  relatedModule: zod.string().optional(),
+});
+
+/**
+ * @summary Get user gamification profile badges and streak
+ */
+export const GetGamificationProfileResponse = zod.object({
+  level: zod.number(),
+  levelTitle: zod.string(),
+  xp: zod.number(),
+  xpToNextLevel: zod.number(),
+  streakDays: zod.number(),
+  badges: zod.array(
+    zod.object({
+      id: zod.string(),
+      name: zod.string(),
+      description: zod.string(),
+      icon: zod.string(),
+      earnedAt: zod.string().optional(),
+      rarity: zod.string(),
+      isEarned: zod.boolean(),
+    }),
+  ),
+  completedModules: zod.array(zod.string()).optional(),
+  progressPercent: zod.number(),
+  rank: zod.number().optional(),
+});
+
+/**
+ * @summary Get top students leaderboard
+ */
+export const GetLeaderboardResponseItem = zod.object({
+  rank: zod.number(),
+  name: zod.string(),
+  xp: zod.number(),
+  level: zod.number(),
+  badges: zod.number(),
+  targetCountry: zod.string().optional(),
+});
+export const GetLeaderboardResponse = zod.array(GetLeaderboardResponseItem);
+
+/**
+ * @summary Match scholarships based on student profile
+ */
+export const MatchScholarshipsBody = zod.object({
+  cgpa: zod.number(),
+  degree: zod.string(),
+  targetCountry: zod.string().optional(),
+  field: zod.string().optional(),
+  nationality: zod.string().optional(),
+  financialNeed: zod.boolean().optional(),
+});
+
+export const MatchScholarshipsResponse = zod.object({
+  scholarships: zod.array(
+    zod.object({
+      id: zod.string(),
+      name: zod.string(),
+      provider: zod.string(),
+      country: zod.string(),
+      amount: zod.string(),
+      coverage: zod.string().optional(),
+      eligibility: zod.string().optional(),
+      deadline: zod.string().optional(),
+      matchScore: zod.number(),
+      type: zod.string(),
+      applicationUrl: zod.string().optional(),
+    }),
+  ),
+  totalValue: zod.string(),
+  summary: zod.string(),
+});
+
+/**
+ * @summary Get visa guidance for target country
+ */
+export const GetVisaGuideBody = zod.object({
+  country: zod.string(),
+  degree: zod.string().optional(),
+  intakeMonth: zod.string().optional(),
+  nationality: zod.string().optional(),
+});
+
+export const GetVisaGuideResponse = zod.object({
+  country: zod.string(),
+  visaType: zod.string(),
+  processingTime: zod.string(),
+  fee: zod.string().optional(),
+  steps: zod.array(
+    zod.object({
+      step: zod.number(),
+      title: zod.string(),
+      description: zod.string(),
+      timeframe: zod.string(),
+      critical: zod.boolean(),
+    }),
+  ),
+  requiredDocuments: zod.array(zod.string()),
+  tips: zod.array(zod.string()),
+  successRate: zod.number().optional(),
+  postStudyWork: zod.string().optional(),
+});
