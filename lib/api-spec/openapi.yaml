@@ -3,20 +3,30 @@ info:
   # Do not change the title, if the title changes, the import paths will be broken
   title: Api
   version: 0.1.0
-  description: API specification
+  description: GradPath AI – Career to Loan Intelligence Platform API
 servers:
   - url: /api
     description: Base API path
 tags:
   - name: health
     description: Health operations
+  - name: profile
+    description: Student profile operations
+  - name: career
+    description: AI Career Navigator
+  - name: roi
+    description: ROI and Outcome Intelligence
+  - name: loan
+    description: Loan Readiness Engine
+  - name: dashboard
+    description: Dashboard summaries
+
 paths:
   /healthz:
     get:
       operationId: healthCheck
       tags: [health]
       summary: Health check
-      description: Returns server health status
       responses:
         "200":
           description: Healthy
@@ -24,6 +34,173 @@ paths:
             application/json:
               schema:
                 $ref: "#/components/schemas/HealthStatus"
+
+  /profile:
+    post:
+      operationId: createProfile
+      tags: [profile]
+      summary: Create or update student profile
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/CreateProfileBody"
+      responses:
+        "201":
+          description: Profile created
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/StudentProfile"
+    get:
+      operationId: listProfiles
+      tags: [profile]
+      summary: List student profiles
+      responses:
+        "200":
+          description: List of profiles
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/StudentProfile"
+
+  /profile/{id}:
+    get:
+      operationId: getProfile
+      tags: [profile]
+      summary: Get student profile by ID
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+      responses:
+        "200":
+          description: Student profile
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/StudentProfile"
+
+  /career/recommend:
+    post:
+      operationId: getCareerRecommendations
+      tags: [career]
+      summary: Get AI career recommendations (countries, courses, universities)
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/CareerRecommendationBody"
+      responses:
+        "200":
+          description: Career recommendations
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/CareerRecommendationResult"
+
+  /roi/predict:
+    post:
+      operationId: getRoiPrediction
+      tags: [roi]
+      summary: Get ROI, salary, and placement prediction
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/RoiPredictionBody"
+      responses:
+        "200":
+          description: ROI prediction result
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/RoiPredictionResult"
+
+  /loan/eligibility:
+    post:
+      operationId: getLoanEligibility
+      tags: [loan]
+      summary: Get loan eligibility and EMI scenarios
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/LoanEligibilityBody"
+      responses:
+        "200":
+          description: Loan eligibility result
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/LoanEligibilityResult"
+
+  /dashboard/summary:
+    get:
+      operationId: getDashboardSummary
+      tags: [dashboard]
+      summary: Get platform-level dashboard summary stats
+      responses:
+        "200":
+          description: Dashboard summary
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/DashboardSummary"
+
+  /dashboard/recent-assessments:
+    get:
+      operationId: getRecentAssessments
+      tags: [dashboard]
+      summary: Get recent student assessments
+      responses:
+        "200":
+          description: Recent assessments
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/AssessmentSummary"
+
+  /dashboard/country-distribution:
+    get:
+      operationId: getCountryDistribution
+      tags: [dashboard]
+      summary: Get country preference distribution
+      responses:
+        "200":
+          description: Country distribution
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/CountryDistribution"
+
+  /dashboard/risk-breakdown:
+    get:
+      operationId: getRiskBreakdown
+      tags: [dashboard]
+      summary: Get placement risk level breakdown
+      responses:
+        "200":
+          description: Risk breakdown
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/RiskBreakdown"
+
 components:
   schemas:
     HealthStatus:
@@ -34,3 +211,429 @@ components:
       required:
         - status
 
+    StudentProfile:
+      type: object
+      properties:
+        id:
+          type: integer
+        name:
+          type: string
+        email:
+          type: string
+        degree:
+          type: string
+        branch:
+          type: string
+        cgpa:
+          type: number
+        internships:
+          type: integer
+        skills:
+          type: array
+          items:
+            type: string
+        targetCountry:
+          type: string
+        preferredCourse:
+          type: string
+        budgetRangeMin:
+          type: integer
+        budgetRangeMax:
+          type: integer
+        familyIncome:
+          type: string
+        hasCoApplicant:
+          type: boolean
+        createdAt:
+          type: string
+      required:
+        - id
+        - name
+        - degree
+        - cgpa
+        - createdAt
+
+    CreateProfileBody:
+      type: object
+      properties:
+        name:
+          type: string
+        email:
+          type: string
+        degree:
+          type: string
+        branch:
+          type: string
+        cgpa:
+          type: number
+        internships:
+          type: integer
+        skills:
+          type: array
+          items:
+            type: string
+        targetCountry:
+          type: string
+        preferredCourse:
+          type: string
+        budgetRangeMin:
+          type: integer
+        budgetRangeMax:
+          type: integer
+        familyIncome:
+          type: string
+        hasCoApplicant:
+          type: boolean
+      required:
+        - name
+        - degree
+        - cgpa
+
+    CareerRecommendationBody:
+      type: object
+      properties:
+        cgpa:
+          type: number
+        degree:
+          type: string
+        branch:
+          type: string
+        interests:
+          type: string
+        budget:
+          type: integer
+        targetCountry:
+          type: string
+        internships:
+          type: integer
+        skills:
+          type: array
+          items:
+            type: string
+      required:
+        - cgpa
+        - degree
+
+    CareerRecommendationResult:
+      type: object
+      properties:
+        countries:
+          type: array
+          items:
+            $ref: "#/components/schemas/CountryRecommendation"
+        courses:
+          type: array
+          items:
+            $ref: "#/components/schemas/CourseRecommendation"
+        universities:
+          type: array
+          items:
+            $ref: "#/components/schemas/UniversityRecommendation"
+        careerPath:
+          type: array
+          items:
+            type: string
+        aiExplanation:
+          type: string
+      required:
+        - countries
+        - courses
+        - universities
+        - aiExplanation
+
+    CountryRecommendation:
+      type: object
+      properties:
+        country:
+          type: string
+        flag:
+          type: string
+        fitScore:
+          type: number
+        avgTuition:
+          type: string
+        postStudyWork:
+          type: string
+        jobMarket:
+          type: string
+        reason:
+          type: string
+      required:
+        - country
+        - fitScore
+        - reason
+
+    CourseRecommendation:
+      type: object
+      properties:
+        name:
+          type: string
+        field:
+          type: string
+        duration:
+          type: string
+        avgSalary:
+          type: string
+        demandLevel:
+          type: string
+        reason:
+          type: string
+      required:
+        - name
+        - field
+
+    UniversityRecommendation:
+      type: object
+      properties:
+        name:
+          type: string
+        country:
+          type: string
+        tier:
+          type: string
+        admitProbability:
+          type: number
+        tuitionRange:
+          type: string
+        employabilityRank:
+          type: integer
+        reason:
+          type: string
+      required:
+        - name
+        - country
+        - tier
+
+    RoiPredictionBody:
+      type: object
+      properties:
+        cgpa:
+          type: number
+        degree:
+          type: string
+        internships:
+          type: integer
+        collegeTier:
+          type: string
+        field:
+          type: string
+        skills:
+          type: array
+          items:
+            type: string
+        country:
+          type: string
+        course:
+          type: string
+        totalBudget:
+          type: integer
+        loanAmount:
+          type: integer
+      required:
+        - cgpa
+        - degree
+        - field
+
+    RoiPredictionResult:
+      type: object
+      properties:
+        placementScore:
+          type: number
+        placement3Month:
+          type: number
+        placement6Month:
+          type: number
+        placement12Month:
+          type: number
+        riskLevel:
+          type: string
+        salaryBandMin:
+          type: integer
+        salaryBandMax:
+          type: integer
+        salaryMedian:
+          type: integer
+        totalCost:
+          $ref: "#/components/schemas/CostBreakdown"
+        roiStrength:
+          type: string
+        paybackYears:
+          type: number
+        aiExplanation:
+          type: string
+      required:
+        - placementScore
+        - placement3Month
+        - placement6Month
+        - placement12Month
+        - riskLevel
+        - salaryBandMin
+        - salaryBandMax
+        - roiStrength
+        - aiExplanation
+
+    CostBreakdown:
+      type: object
+      properties:
+        tuition:
+          type: integer
+        living:
+          type: integer
+        visa:
+          type: integer
+        travel:
+          type: integer
+        misc:
+          type: integer
+        total:
+          type: integer
+      required:
+        - tuition
+        - total
+
+    LoanEligibilityBody:
+      type: object
+      properties:
+        totalCost:
+          type: integer
+        expectedSalary:
+          type: integer
+        familyIncome:
+          type: string
+        hasCoApplicant:
+          type: boolean
+        scholarship:
+          type: integer
+        riskLevel:
+          type: string
+        tenure:
+          type: integer
+      required:
+        - totalCost
+        - expectedSalary
+
+    LoanEligibilityResult:
+      type: object
+      properties:
+        eligibleMin:
+          type: integer
+        eligibleMax:
+          type: integer
+        loanReadinessScore:
+          type: integer
+        readinessLevel:
+          type: string
+        needsCoApplicant:
+          type: boolean
+        recommendedTenure:
+          type: integer
+        emiScenarios:
+          type: array
+          items:
+            $ref: "#/components/schemas/EmiScenario"
+        affordabilityScore:
+          type: string
+        recommendation:
+          type: string
+        aiExplanation:
+          type: string
+      required:
+        - eligibleMin
+        - eligibleMax
+        - loanReadinessScore
+        - readinessLevel
+        - aiExplanation
+
+    EmiScenario:
+      type: object
+      properties:
+        tenure:
+          type: integer
+        emi:
+          type: integer
+        totalInterest:
+          type: integer
+        stressLevel:
+          type: string
+      required:
+        - tenure
+        - emi
+        - stressLevel
+
+    DashboardSummary:
+      type: object
+      properties:
+        totalAssessments:
+          type: integer
+        avgPlacementScore:
+          type: number
+        avgLoanReadiness:
+          type: number
+        topDestination:
+          type: string
+        lowRiskPercent:
+          type: number
+        mediumRiskPercent:
+          type: number
+        highRiskPercent:
+          type: number
+        totalLoanVolumeCr:
+          type: number
+      required:
+        - totalAssessments
+        - avgPlacementScore
+        - topDestination
+
+    AssessmentSummary:
+      type: object
+      properties:
+        id:
+          type: integer
+        studentName:
+          type: string
+        degree:
+          type: string
+        targetCountry:
+          type: string
+        placementScore:
+          type: number
+        riskLevel:
+          type: string
+        loanReadiness:
+          type: integer
+        createdAt:
+          type: string
+      required:
+        - id
+        - studentName
+        - placementScore
+        - riskLevel
+        - createdAt
+
+    CountryDistribution:
+      type: object
+      properties:
+        country:
+          type: string
+        count:
+          type: integer
+        percentage:
+          type: number
+      required:
+        - country
+        - count
+        - percentage
+
+    RiskBreakdown:
+      type: object
+      properties:
+        level:
+          type: string
+        count:
+          type: integer
+        percentage:
+          type: number
+      required:
+        - level
+        - count
+        - percentage

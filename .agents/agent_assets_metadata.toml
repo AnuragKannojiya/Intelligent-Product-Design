@@ -1,0 +1,8 @@
+uploads = []
+outputs = []
+
+[[generated]]
+id = "2S86xqsvnSVV1f7Wwvhvj"
+uri = "file://artifacts/gradpath/public/hero.png"
+type = "image"
+title = "Cinematic student with AI holograms"

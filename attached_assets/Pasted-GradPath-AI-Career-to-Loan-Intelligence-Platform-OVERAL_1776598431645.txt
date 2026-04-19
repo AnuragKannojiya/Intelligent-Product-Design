@@ -1,0 +1,154 @@
+GradPath AI – Career to Loan Intelligence Platform
+
+⚡ OVERALL STRATEGY (IMPORTANT)
+
+👉 Tum kya build kar rahe ho:
+
+NOT a chatbot
+NOT just recommendation system
+
+👉 You are building:
+“Outcome-based Education Financing Platform”
+
+🧠 SYSTEM BREAKDOWN (STEP BY STEP)
+🔷 STEP 1: PROBLEM UNDERSTANDING (PPT + MINDSET)
+Write this clearly:
+Student journey fragmented
+No clarity:
+which course
+expected salary
+repayment ability
+Lenders blind loan dete hain
+
+👉 KEY LINE:
+“Education financing today is input-based, not outcome-based.”
+
+🔷 STEP 2: SOLUTION STRUCTURE
+Your system = 4 Layers
+🟢 Layer 1: AI Career Navigator
+Input:
+CGPA
+degree
+interest
+budget
+country
+Output:
+best countries
+courses
+universities
+🔵 Layer 2: ROI + Salary Engine
+Output:
+total cost
+expected salary
+payback time
+🟡 Layer 3: Placement Risk Engine (WINNING PART)
+Output:
+placed in 3 months: %
+6 months: %
+12 months: %
+salary band
+risk level
+🔴 Layer 4: Loan Readiness Engine
+Output:
+eligibility
+EMI
+affordability score
+🔷 STEP 3: TECH IMPLEMENTATION
+🖥️ FRONTEND (React + Tailwind)
+Pages:
+Landing page
+Student form
+Dashboard
+⚙️ BACKEND (Node.js)
+APIs:
+/recommendation
+/prediction
+/loan
+🤖 AI LOGIC (IMPORTANT)
+🔹 Placement Score Formula
+score =
+(CGPA * 0.25) +
+(Internship * 0.20) +
+(College Tier * 0.20) +
+(Field Demand * 0.20) +
+(Skills * 0.10) +
+(Job Market * 0.05)
+🔹 Output Example:
+3 month placement: 65%
+6 month: 85%
+salary: ₹8–12 LPA
+risk: Medium
+🔹 Loan Logic
+eligible_loan = salary * 8
+emi = loan / tenure
+🔷 STEP 4: UI DESIGN (VERY IMPORTANT)
+🎯 Dashboard MUST SHOW:
+Section 1:
+Recommended countries
+Section 2:
+Salary prediction
+Section 3:
+Placement probability
+Section 4:
+Loan eligibility
+
+👉 Clean UI = BIG advantage
+
+🔷 STEP 5: AI INTEGRATION
+Use LLM for:
+explanation
+roadmap
+chatbot
+Example:
+
+👉 “You have strong academics but limited internship exposure…”
+
+🔷 STEP 6: PPT CREATION (MOST IMPORTANT)
+Slide 1: Problem
+
+Fragmented journey
+
+Slide 2: Gap
+
+No outcome prediction
+
+Slide 3: Solution
+
+GradPath AI
+
+Slide 4: Product Flow
+
+Explore → Predict → Finance
+
+Slide 5: AI Architecture
+
+LLM + ML + API
+
+Slide 6: Demo Screens
+Slide 7: Business Impact
+reduce NPA
+increase conversion
+Slide 8: Why Poonawalla Wins
+🔷 STEP 7: PITCH SCRIPT
+START:
+
+👉
+“Today, lenders give education loans without knowing if a student can repay.”
+
+MIDDLE:
+
+👉
+“GradPath AI predicts placement, salary, and repayment ability.”
+
+END:
+
+👉
+“This transforms lending from assumption-based to outcome-based.”
+
+🔷 STEP 8: TIME PLAN
+Day 1:
+PPT + idea
+Day 2:
+frontend
+Day 3:
+logic + polish
